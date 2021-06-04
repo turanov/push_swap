@@ -16,3 +16,11 @@ void	ft_free_stack(t_stack **stack)
 	*stack = 0;
 }
 
+void	ft_swap(int *a, int *b)
+{
+	int	temp;
+
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}

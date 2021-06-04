@@ -5,20 +5,39 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+int g_ans;
+
 typedef struct s_stack
 {
-				int content;
+				int value;
+				int order;
+				int flag;
 				struct s_stack * next;
 }				t_stack;
-t_stack *ft_new(int content);
-int	ft_add_back(t_stack **stack, t_stack *new, int *max, int *min);
-void	ft_free_stack(t_stack **stack);
-int	ft_atoi(const char *str);
+typedef struct s_flags
+{
+				int	next;
+				int mid;
+				int max;
+				int flag;
+}				t_flags;
 
-void ft_sa_sb(t_stack **stack);
-void ft_ss(t_stack **stack_a, t_stack **stack_b);
-void ft_pa_pb(t_stack **stack_a, t_stack **stack_b);
-void ft_ra_rb(t_stack **stack);
-void ft_rra_rrb(t_stack **stack);
-void ft_rrr(t_stack **stack_a, t_stack **stack_b);
+t_stack	*ft_new(int content, int pos);
+int		ft_add_back(t_stack **stack, t_stack *new, int *max, int *min);
+void	ft_free_stack(t_stack **stack);
+int		ft_stack_size(t_stack *stack);
+int		ft_atoi(const char *str);
+void	ft_swap(int *a, int *b);
+
+void	ft_sa(t_stack **stack);
+void	ft_sb(t_stack **stack);
+void	ft_ss(t_stack **stack_a, t_stack **stack_b);
+void	ft_pa(t_stack **stack_a, t_stack **stack_b);
+void	ft_pb(t_stack **stack_a, t_stack **stack_b);
+void	ft_ra(t_stack **stack);
+void	ft_rb(t_stack **stack);
+void	ft_rr(t_stack **stack_a, t_stack **stack_b);
+void	ft_rra(t_stack **stack);
+void	ft_rrb(t_stack **stack);
+void	ft_rrr(t_stack **stack_a, t_stack **stack_b);
 #endif
