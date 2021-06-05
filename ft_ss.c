@@ -2,6 +2,7 @@
 
 void ft_ss(t_stack **stack_a, t_stack **stack_b)
 {
+	g_ans++;
 	ft_sa(stack_a);
 	ft_sb(stack_b);
 }

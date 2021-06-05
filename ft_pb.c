@@ -2,6 +2,7 @@
 
 void ft_pb(t_stack **stack_a, t_stack **stack_b)
 {
+	g_ans++;
 	t_stack *a;
 	t_stack *b;
 	t_stack *prev_b;
@@ -22,9 +23,9 @@ void ft_pb(t_stack **stack_a, t_stack **stack_b)
 			b = b->next;
 		}
 		if (!a)
-			*stack_a = ft_new(b->value, b->order);
+			*stack_a = ft_new(b->value, b->order, b->flag + 1);
 		else
-			a->next = ft_new(b->value, b->order);
+			a->next = ft_new(b->value, b->order, b->flag + 1);
 		prev_b->next = NULL;
 		free(b);
 	}

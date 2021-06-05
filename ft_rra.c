@@ -2,6 +2,7 @@
 
 void ft_rra(t_stack **stack)
 {
+	g_ans++;
 	t_stack *first;
 	t_stack *last;
 

@@ -19,10 +19,9 @@ typedef struct s_flags
 				int	next;
 				int mid;
 				int max;
-				int flag;
 }				t_flags;
 
-t_stack	*ft_new(int content, int pos);
+t_stack	*ft_new(int value, int order, int flag);
 int		ft_add_back(t_stack **stack, t_stack *new, int *max, int *min);
 void	ft_free_stack(t_stack **stack);
 int		ft_stack_size(t_stack *stack);

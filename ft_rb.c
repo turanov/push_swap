@@ -2,6 +2,7 @@
 
 void ft_rb(t_stack **stack)
 {
+	g_ans++;
 	t_stack *prev;
 	t_stack *cur;
 

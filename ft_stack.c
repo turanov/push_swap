@@ -1,6 +1,6 @@
 #include "ft_push_swap.h"
 
-t_stack *ft_new(int value, int order)
+t_stack *ft_new(int value, int order, int flag)
 {
     t_stack	*stack;
 
@@ -9,6 +9,7 @@ t_stack *ft_new(int value, int order)
         return (0);
     stack->value = value;
     stack->order = order;
+    stack->flag = flag;
     stack->next = 0;
     return (stack);
 }
