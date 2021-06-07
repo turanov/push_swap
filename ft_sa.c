@@ -4,26 +4,24 @@ void	ft_sa(t_stack **stack)
 {
 	g_ans++;
 	t_stack	*cur;
-	t_stack	*next;
 	t_stack	*temp;
 
 	temp = *stack;
 	cur = 0;
-	next = 0;
-	while (temp)
+	if (temp)
 	{
 		cur = temp;
-		next = temp->next;
-		if (temp->next)
+		temp = temp->next;
+		while (temp->next)
 		{
-			if (temp->next->next)
-				temp = temp->next;
-			else
-				break ;
+			cur = temp;
+			temp = temp->next;
 		}
-		else
-			break ;
+		if (cur && temp)
+		{
+			ft_swap(&cur->value, &temp->value);
+			ft_swap(&cur->order, &temp->order);
+			ft_swap(&cur->flag, &temp->flag);
+		}
 	}
-	if (cur && next)
-		ft_swap(&cur->value, &next->value);
 }
