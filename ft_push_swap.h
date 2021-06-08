@@ -12,6 +12,8 @@ typedef struct s_stack
 				int value;
 				int order;
 				int flag;
+				int rr;
+				int rrr;
 				struct s_stack * next;
 }				t_stack;
 typedef struct s_flags
@@ -20,6 +22,7 @@ typedef struct s_flags
 				int mid;
 				int max;
 }				t_flags;
+
 
 t_stack	*ft_new(int value, int order, int flag);
 int		ft_add_back(t_stack **stack, t_stack *new, int *max, int *min);

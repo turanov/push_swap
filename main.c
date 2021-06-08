@@ -3,8 +3,6 @@
 #include "ft_push_swap.h"
 #include "libft/libft.h"
 
-int is_ready_to_b();
-
 int check_max_and_min(char *s, int minus)
 {
 	char *str;
@@ -62,20 +60,20 @@ void ft_print_stack(t_stack *stack_a, t_stack *stack_b)
 	if (stack_a && stack_b)
 	{
 		ft_print_stack(stack_a->next, stack_b->next);
-		printf("flag = %d  order = %2d, %-5d | flag = %d  order = %d, %-5d\n", stack_a->flag, stack_a->order,
-			   stack_a->value,
-			   stack_b->flag, stack_b->order, stack_b->value);
+		printf("flag = %d  order = %2d  rr = %3d  rrr = %3d , %-5d| flag = %d  order = %d  rr = %3d  rrr = %3d , %-5d\n", stack_a->flag, stack_a->order,
+			    stack_a->rr, stack_a->rrr, stack_a->value,
+			   stack_b->flag, stack_b->order, stack_b->rr, stack_b->rrr,stack_b->value);
 
 	}
 	else if (!stack_a && stack_b)
 	{
 		ft_print_stack(stack_a, stack_b->next);
-		printf("%-27c | flag = %d  order = %d, %-5d\n", ' ', stack_b->flag, stack_b->order, stack_b->value);
+		printf("%-47c | flag = %d  order = %d  rr = %3d  rrr = %3d , %-5d\n", ' ', stack_b->flag, stack_b->order,stack_b->rr, stack_b->rrr, stack_b->value);
 	}
 	else if (stack_a && !stack_b)
 	{
 		ft_print_stack(stack_a->next, stack_b);
-		printf("flag = %d  order = %2d, %-5d | %-5c\n", stack_a->flag, stack_a->order, stack_a->value, ' ');
+		printf("flag = %d  order = %2d  rr = %3d  rrr = %3d  , %-5d | %-5c\n", stack_a->flag, stack_a->order,  stack_a->rr, stack_a->rrr,  stack_a->value, ' ');
 	}
 }
 
@@ -205,562 +203,334 @@ void ft_get_position_stack(t_stack **pStack, int *arr, int n)
 	}
 }
 
-t_flags *ft_new_flag(int next, int mid, int max)
+
+int find_max_to_remain_in_a2(t_stack **pStack, t_stack *cur, int value, int *max)
 {
-	t_flags *flag;
-
-	flag = malloc(sizeof(t_flags));
-	if (!flag)
-		return (NULL);
-	flag->next = next;
-	flag->mid = mid;
-	flag->max = max;
-	return (flag);
-}
-
-int get_best_way_for_min(t_stack *pStack, t_flags flags, int max)
-{
-	int i;
-	int min_index_value;
-	int max_index_value;
-
-	min_index_value = flags.mid;
-	max_index_value = flags.next;
-	i = 1;
-	while (pStack)
-	{
-		if (pStack->order <= flags.mid && i <= min_index_value)
-			min_index_value = i;
-		if (pStack->order <= flags.mid && i >= max_index_value)
-			max_index_value = i;
-		pStack = pStack->next;
-		i++;
-	}
-	if (max - max_index_value <= min_index_value)
-		return (max - max_index_value);
-	return (min_index_value * -1);
-}
-
-int get_best_way_for_max(t_stack *pStack, t_flags flags, int max, int *ans)
-{
-	int i;
-	int top;
-	int bottom;
-	int ret;
-
-	ret = 0;
-	top = 0;
-	bottom = max;
-	i = 1;
-	while (pStack)
-	{
-		if (pStack->order > flags.mid && i >= top)
-		{
-			top = i;
-			ret = 1;
-		}
-		if (pStack->order > flags.mid && i <= bottom)
-		{
-			ret = 1;
-			bottom = i;
-		}
-		pStack = pStack->next;
-		i++;
-	}
-	if (top <= max && max - top <= bottom)
-		*ans = (max - top);
-	else
-		*ans = (-bottom);
-	return (ret);
-}
-
-void ft_print_flags(t_flags *flags)
-{
-	printf("Next = %d\n", flags->next);
-	printf("Mid = %d\n", flags->mid);
-	printf("Max = %d\n", flags->max);
-}
-
-int is_can_do_rb(t_stack **pStack)
-{
-	int min;
-	int i;
-	t_stack *b;
-
-	min = -2147483648;
-	b = *pStack;
-	i = 0;
-	if (b)
-	{
-		min = b->order;
-		while (b->next)
-		{
-			b = b->next;
-			if (min > b->order)
-				min = b->order;
-			i++;
-		}
-	}
-	return (ft_stack_size(*pStack)- i);
-}
-
-void devide_2_part(t_stack **stack_a, t_stack **stack_b, t_flags flags)
-{
-	int best_way;
 	int cnt;
-	cnt = 0;
 
-	while (cnt < flags.mid)
+	if (cur->value == value)
 	{
-		best_way = get_best_way_for_min(*stack_a, flags, flags.max - cnt);
-		if (best_way < 0)
-			while (best_way++ < 0)
-			{
-				ft_rra(stack_a, 1);
-			}
-		else
-			while (best_way--)
-			{
-				if (is_can_do_rb(stack_b))
-				{
-					ft_rr(stack_a, stack_b);
-				}
-				else
-					ft_ra(stack_a,1);
-			}
-		ft_pb(stack_b, stack_a);
-		cnt++;
-	}
-}
-
-int is_next_equal_to_top(t_stack **pStack, t_flags *flags)
-{
-	t_stack *stack;
-
-	stack = *pStack;
-	if (stack)
-	{
-		while (stack->next)
-			stack = stack->next;
-		if (stack->order == flags->next)
-		{
-			stack->flag = -1;
-			return (1);
-		}
-	}
-	return (0);
-}
-
-void fun(t_stack **stack_a, t_stack **stack_b, t_flags *flags)
-{
-	ft_pa(stack_a, stack_b);
-	ft_ra(stack_a,1);
-	flags->next++;
-}
-
-
-int find_best_way_next(t_stack *pStack, t_flags flags, int max)
-{
-	int i;
-	int top;
-	int bottom;
-
-	top = 0;
-	bottom = max;
-	i = 1;
-	while (pStack)
-	{
-		if (pStack->order == flags.next && i >= top)
-			top = i;
-		if (pStack->order == flags.next && i <= bottom)
-			bottom = i;
-		pStack = pStack->next;
-		i++;
-	}
-	if (top <= max && max - top <= bottom)
-		return (max - top);
-	return (-bottom);
-}
-
-void ft_sort_three_b(t_stack **pStack)
-{
-
-}
-
-void ft_sort_four(t_stack **stack_a, t_stack **stack_b)
-{
-	ft_pa(stack_a, stack_b);
-	ft_sort_three(stack_b);
-}
-
-int is_top_more_pev(t_stack **pStack)
-{
-	t_stack *stack;
-	t_stack *prev;
-
-	stack = *pStack;
-	if (stack)
-	{
-		prev = stack;
-		while (stack->next)
-		{
-			prev = stack;
-			stack = stack->next;
-		}
-		if (stack->order > prev->order)
-			return (1);
-	}
-	return (0);
-}
-
-void ft_sort_five(t_stack **stack_a, t_stack **stack_b)
-{
-	ft_pa(stack_a, stack_b);
-	ft_pa(stack_a, stack_b);
-	if (is_top_more_pev(stack_a))
-	{
-		t_stack *stack = *stack_b;
-		// 3 1 2
-		int bln = 0;
-		if (stack->order > stack->next->order && stack->next->order < stack->next->next->order &&
-			stack->order > stack->next->next->order)
-		{
-			bln = 1;
-		}
-		// 1 2 3
-		if (stack->order < stack->next->order && stack->next->order < stack->next->next->order)
-		{
-			bln = 1;
-		}
-		// 2 < 3 > 1
-		if (stack->order < stack->next->order && stack->next->order > stack->next->next->order &&
-			stack->order > stack->next->next->order)
-		{
-			bln = 1;
-		}
-		if (bln)
-			ft_ss(stack_a, stack_b);
-		else
-			ft_sa(stack_a, 1);
-
-	}
-	ft_sort_three(stack_b);
-}
-
-void get_sorted_from_b_to_a(t_stack **stack_a, t_stack **stack_b, t_flags *flags)
-{
-	int best_way;
-	int size;
-	t_stack *b;
-
-	while (flags->next <= flags->mid)
-	{
-		size = ft_stack_size(*stack_b);
-		if (size == 5)
-		{
-			ft_sort_five(stack_a, stack_b);
-			while (flags->next <= flags->mid)
-			{
-				if (is_next_equal_to_top(stack_a, flags))
-				{
-					flags->next++;
-					ft_ra(stack_a,1);
-					continue;
-				}
-				b = *stack_b;
-				if (!b)
-				{
-					return;
-				}
-				while (b->next)
-					b = b->next;
-				b->flag = -1;
-				ft_pa(stack_a, stack_b);
-				flags->next++;
-				ft_ra(stack_a,1);
-			}
-//			ft_print_stack(*stack_a, *stack_b);
-		}
-		if (size == 4)
-		{
-			ft_sort_four(stack_a, stack_b);
-//			ft_print_stack(*stack_a, *stack_b);
-//			printf("FLAGS \n");
-//			ft_print_flags(flags);
-			while (flags->next <= flags->mid)
-			{
-				if (is_next_equal_to_top(stack_a, flags))
-				{
-					flags->next++;
-					ft_ra(stack_a,1);
-					continue;
-				}
-				b = *stack_b;
-				if (!b)
-				{
-					return;
-				}
-				while (b->next)
-					b = b->next;
-				b->flag = -1;
-				ft_pa(stack_a, stack_b);
-				flags->next++;
-				ft_ra(stack_a,1);
-			}
-
-//			printf("---------------------\n");
-//			ft_print_stack(*stack_a, *stack_b);
-//			exit(2);
-		}
-		if (size == 3)
-		{
-			ft_sort_three(stack_b);
-
-//			ft_print_stack(*stack_a, *stack_b);
-//			printf("FLAGS \n");
-			while (flags->next <= flags->mid)
-			{
-				b = *stack_b;
-				if (!b)
-					return;
-//				ft_print_stack(*stack_a, *stack_b);
-				while (b->next)
-					b = b->next;
-				b->flag = -1;
-				ft_pa(stack_a, stack_b);
-				ft_ra(stack_a,1);
-				flags->next++;
-			}
-			return;
-		}
-		best_way = find_best_way_next(*stack_b, *flags, (flags->mid + 1) - flags->next);
-
-		if (best_way < 0)
-			while (best_way++ < 0)
-				ft_rrb(stack_b,1);
-		else
-			while (best_way--)
-				ft_rb(stack_b,1);
-		b = *stack_b;
-		if (!b)
-			return;
-		while (b->next)
-			b = b->next;
-		b->flag = -1;
-		ft_pa(stack_a, stack_b);
-		ft_ra(stack_a,1);
-		flags->next++;
-	}
-}
-
-int is_2_next_equal_to_2_top(t_stack **pStack, t_flags *flags)
-{
-	t_stack *stack;
-	t_stack *prev;
-
-	stack = *pStack;
-	if (stack)
-	{
-
-		prev = NULL;
-		while (stack->next)
-		{
-
-			prev = stack;
-			stack = stack->next;
-		}
-		if (!prev)
-			return (0);
-		if (prev->order == flags->next && stack->order == flags->next + 1)
-			return (1);
-	}
-	return (0);
-}
-
-void devide_2_part_second(t_stack **stack_a, t_stack **stack_b, t_flags *flags)
-{
-	t_stack *a;
-
-	a = *stack_a;
-	while (a && flags->next <= flags->max)
-	{
-		if (is_2_next_equal_to_2_top(stack_a, flags))
-		{
-			ft_sa(stack_a,1);
-			a = *stack_a;
-		}
-		if (is_next_equal_to_top(stack_a, flags))
-		{
-			flags->next++;
-			ft_ra(stack_a,1);
-			a = *stack_a;
-		}
-		if (a->flag >= 0 && a->order >= flags->next && a->order <= flags->max)
-		{
-			ft_pb(stack_b, stack_a);
-			a = *stack_a;
-		}
-		a = a->next;
-	}
-}
-
-void update_flags(t_flags *flags)
-{
-	flags->mid = (flags->max - flags->next) / 2 + flags->next;
-}
-
-int is_top_of_a_ready_go_to_b(t_stack *a, t_flags *flags)
-{
-	while (a->next)
-		a = a->next;
-	if (a->flag >= 0 && a->order >= flags->next && a->order <= flags->mid)
+		*max = value;
 		return (1);
-	return 0;
+	}
+	cnt = find_max_to_remain_in_a2(pStack, cur->next, value, max);
+	if (cnt >= 1)
+	{
+		if (cur->value >= *max)
+		{
+			*max = cur->value;
+			cnt++;
+		}
+	}
+	return (cnt);
 }
 
-void devide_2_part_third(t_stack **stack_a, t_stack **stack_b, t_flags *flags)
+
+int find_max_to_remain_in_a2_help(t_stack **pStack, t_stack *cur, int value, int *max)
 {
 	int cnt;
+
+	if (!cur)
+		return (0);
+	cnt = find_max_to_remain_in_a2_help(pStack, cur->next, value, max);
+	if (cur->value == value)
+		return (cnt);
+	if (cur->value > *max)
+	{
+		*max = cur->value;
+		return (++cnt);
+	}
+	return (cnt);
+}
+int find_max_to_remain_in_a_mark(t_stack **pStack, t_stack *cur, int value, int *max)
+{
+	int cnt;
+
+	if (cur->value == value)
+	{
+		cur->flag = 1;
+		*max = value;
+		return (1);
+	}
+	cnt = find_max_to_remain_in_a_mark(pStack, cur->next, value, max);
+	if (cnt >= 1)
+	{
+		if (cur->value >= *max)
+		{
+			cur->flag = 1;
+			*max = cur->value;
+			cnt++;
+		}
+	}
+	return (cnt);
+}
+int find_max_to_remain_in_a_mark_help(t_stack **pStack, t_stack *cur, int value, int *max)
+{
+	int cnt;
+
+	if (!cur)
+		return (0);
+	cnt = find_max_to_remain_in_a_mark_help(pStack, cur->next, value, max);
+	if (cur->value == value)
+		return (cnt);
+	if (cur->value > *max)
+	{
+		cur->flag = 1;
+		*max = cur->value;
+		return (++cnt);
+	}
+	return (cnt);
+}
+
+int is_emtpy_flag(t_stack *pStack)
+{
+	while (pStack)
+	{
+		if (pStack->flag == 0)
+			return (0);
+		pStack = pStack->next;
+	}
+	return (1);
+}
+
+void ft_move_from_a_to_b(t_stack **stack_a, t_stack **stack_b)
+{
+	t_stack *cur;
+
 	while (1)
 	{
-		if (is_2_next_equal_to_2_top(stack_a, flags))
-		{
-			ft_sa(stack_a,1);
-		}
-		if (is_next_equal_to_top(stack_a, flags))
-		{
-			flags->next++;
-			ft_ra(stack_a,1);
-			update_flags(flags);
-		}
-		else
+		cur = *stack_a;
+		if (is_emtpy_flag(cur))
 			break;
-	}
-	cnt = flags->next;
-	while (cnt <= flags->max)
-	{
-		if (is_top_of_a_ready_go_to_b(*stack_a, flags))
+		while (cur->next)
+			cur = cur->next;
+		if (cur->flag == 0)
 		{
 			ft_pb(stack_b, stack_a);
 		}
 		else
-		{
-			if (is_can_do_rb(stack_b))
-			{
-				ft_rr(stack_a, stack_b);
-			}
-			else
-				ft_ra(stack_a, 1);
-		}
-		cnt++;
-	}
-	cnt = flags->mid;
-	while (cnt < flags->max)
-	{
-		ft_rra(stack_a,1);
-		cnt++;
+			ft_ra(stack_a, 1);
 	}
 }
 
 
-int sort(t_stack **stack_a, t_stack **stack_b, t_flags flags)
+t_stack find_step_a(t_stack **stack_a, int value, int size, int *bln)
 {
-	int best_way;
-	int cnt;
+	t_stack *cur;
+	int idx;
 
-	cnt = 0;
-	int max = flags.max;
-	int check = 1;
-	while (check)
+	cur = *stack_a;
+	idx = 0;
+	int max = -2147000000;
+	t_stack temp;
+	while (cur)
 	{
-		check = get_best_way_for_max(*stack_b, flags, max, &best_way);
-		if (!check)
-			break;
-		if (is_next_equal_to_top(stack_b, &flags))
-		{
-			fun(stack_a, stack_b, &flags);
-			check = 1;
-		}
-		else
-		{
-			int bln = 1;
-			if (best_way < 0)
-				while (best_way++ < 0)
-				{
-					ft_rra(stack_b,1);
-					if (is_next_equal_to_top(stack_b, &flags))
-					{
-						bln = 0;
-						fun(stack_a, stack_b, &flags);
-					}
-					check = 1;
-				}
-			else
-				while (best_way--)
-				{
-					ft_ra(stack_b,1);
-					if (is_next_equal_to_top(stack_b, &flags))
-					{
-						bln = 0;
-						fun(stack_a, stack_b, &flags);
-					}
-					check = 1;
-				}
-			if (bln)
-			{
-				check = 1;
-				ft_pa(stack_a, stack_b);
-			}
-		}
-		cnt++;
-		max--;
 
+		if (cur->value < value && cur->value > max)
+		{
+			max = cur->value;
+			temp = *cur;
+		}
+		idx++;
+		cur = cur->next;
 	}
-	get_sorted_from_b_to_a(stack_a, stack_b, &flags);
-	update_flags(&flags);
-	devide_2_part_third(stack_a, stack_b, &flags);
-	if (flags.next <= flags.max)
+	if (max > -2147000000)
+		return (temp);
+	cur = *stack_a;
+	t_stack curr = *cur;
+	while (cur)
 	{
-		update_flags(&flags);
-		return sort(stack_a, stack_b, flags);
+		if (cur->value < curr.value)
+			curr = *cur;
+		cur = cur->next;
 	}
-	return (flags.next);
+	*bln = 1;
+	return (curr);
 }
 
-t_flags get_new_flag(int next, int mid, int max)
+int ft_max(int rr, int rrr)
 {
-	t_flags flag;
-	flag.next = next;
-	flag.mid = mid;
-	flag.max = max;
-	return flag;
+	if (rr > rrr)
+		return (rr);
+	return (rrr);
 }
 
-void solve(t_stack **stack_a, t_stack **stack_b, int min, int max)
+int ft_min(int a, int b)
 {
-	t_flags *flags;
+	if (a < b)
+		return (a);
+	return (b);
+}
+int find_min_step(int rr, int rrr, int rr_rrr, int rrr_rr)
+{
+	return ft_min(ft_min(rr, rrr), ft_min(rr_rrr, rrr_rr));
+}
+void ft_update_rr_rrr_a(t_stack **stack_a, int size)
+{
+	t_stack *a;
+	int i;
 
-	flags = ft_new_flag(1, max / 2 + min, max);
-	if (!flags)
-		return;
-	devide_2_part(stack_a, stack_b, *flags);
-	printf("COUNTER = %d\n", g_ans);
-	printf("-----------AFTER DIVIDE-----------\n");
+	a = *stack_a;
+	i = 0;
+	while (a)
+	{
+		a->rr = size - i;
+		a->rrr = i;
+		a = a->next;
+		i++;
+	}
+}
+
+void ft_update_rr_rrr_b(t_stack **stack_b, int size)
+{
+	t_stack *b;
+	int i;
+
+	b = *stack_b;
+	i = 1;
+	while (b)
+	{
+		b->rr = size - i;
+		b->rrr = i;
+		b = b->next;
+		i++;
+	}
+}
+
+void ft_update_rr_rrr(t_stack **stack_a, t_stack **stack_b)
+{
+	ft_update_rr_rrr_a(stack_a, ft_stack_size(*stack_a));
+	ft_update_rr_rrr_b(stack_b, ft_stack_size(*stack_b));
+}
+
+int find_optimal_value(t_stack **stack_a, t_stack **stack_b)
+{
+	t_stack *cur;
+	t_stack a;
+	int size_a;
+	int size_b;
+	int index;
+	int steps;
+	int rr;
+	int rrr;
+	int rr_rrr;
+	int rrr_rr;
+	int temp_rr;
+	int temp_rrr;
+	int temp_rr_rrr;
+	int temp_rrr_rr;
+
+	index = 1;
+	size_b = ft_stack_size(*stack_b);
+	size_a = ft_stack_size(*stack_a);
+	cur = *stack_b;
+	int step;
+	int min_step = 2147483647;
+	int value = cur->value;
+	t_stack temp_a;
+	t_stack temp_b;
+	while (cur)
+	{
+		int bln;
+		bln = 0;
+		a = find_step_a(stack_a, cur->value, size_a, &bln);
+		rr = ft_max(a.rr - bln, cur->rr);
+		rrr = ft_max(a.rrr + bln, cur->rrr);
+		rr_rrr = (a.rr - bln) + cur->rrr;
+		rrr_rr = a.rrr + bln + cur->rr;
+		step = find_min_step(rr, rrr, rr_rrr, rrr_rr);
+		if (step < min_step)
+		{
+			temp_a = a;
+			printf("BLN = %d\n", bln);
+			value = cur->value;
+			min_step = step;
+			temp_rr = rr;
+			temp_rrr = rrr;
+			temp_rr_rrr = rr_rrr;
+			temp_rrr_rr = rrr_rr;
+			temp_b = *cur;
+		}
+		cur = cur->next;
+	}
+//	printf("VALUE = %d\n", value);
+//	printf("TEMP = %d\n", temp_a.value);
+//	printf("step = %d rr = %d, rrr = %d, rr_rrr = %d, rrr_rr = %d\n",step, temp_rr, temp_rrr, temp_rr_rrr, temp_rrr_rr);
+	if (temp_rr < temp_rrr && temp_rr <= temp_rr_rrr && temp_rr <= temp_rrr_rr)
+		while (temp_rr-->0)
+			ft_rr(stack_a, stack_b);
+	else if (temp_rrr <= temp_rr && temp_rrr <= temp_rr_rrr && temp_rrr <= temp_rrr_rr )
+		while (temp_rrr-->0)
+			ft_rrr(stack_a, stack_b);
+	else if(temp_rr_rrr <= temp_rr && temp_rr_rrr <= temp_rrr && temp_rr_rrr <= temp_rrr_rr)
+	{
+		while (temp_a.rr-->0)
+		{
+			ft_ra(stack_a, 1);
+		}
+		while (temp_b.rrr-->0)
+			ft_rrb(stack_b,1);
+	}
+	else if (temp_rrr_rr <= temp_rr && temp_rrr_rr <= temp_rrr && temp_rrr_rr <= temp_rr_rrr){
+		while (temp_a.rrr-->0)
+		{
+			ft_rra(stack_a, 1);
+		}
+		while (temp_b.rr-->0)
+			ft_rb(stack_b,1);
+	}
+	ft_pa(stack_a, stack_b);
+	ft_update_rr_rrr(stack_a, stack_b);
+
+	return (value);
+}
+
+void run_solving(t_stack **stack_a, t_stack **stack_b)
+{
+	int value;
+
 	ft_print_stack(*stack_a, *stack_b);
-	printf("----------------\n");
-	while (flags->next <= flags->mid)
+	while (*stack_b)
 	{
-		flags->next = sort(stack_a, stack_b,
-						   get_new_flag(flags->next, (flags->mid - flags->next) / 2 + flags->next, flags->mid));
-		printf("-----------------\n");
+		value = find_optimal_value(stack_a, stack_b);
+//		ft_print_stack(*stack_a, *stack_b);
 	}
-	while (flags->next <= flags->max)
+}
+
+
+void solve(t_stack **stack_a, t_stack **stack_b, int min, int m)
+{
+	t_stack *cur;
+	int found_max;
+	int max;
+	t_stack *value;
+
+	max = 0;
+	cur = *stack_a;
+	int k = 0;
+	while (cur)
 	{
-		update_flags(flags);
-		devide_2_part_third(stack_a, stack_b, flags);
-		update_flags(flags);
-		flags->next = sort(stack_a, stack_b, *flags);
+//		found_max = find_max_to_remain_in_a(stack_a, cur, 0);
+		found_max = find_max_to_remain_in_a2(stack_a, *stack_a,cur->value, &k);
+		found_max += find_max_to_remain_in_a2_help(stack_a, *stack_a,cur->value, &k);
+		k = 0;
+		if (found_max > max)
+		{
+			value = cur;
+			max = found_max;
+		}
+		cur = cur->next;
 	}
+	k = 0;
+	find_max_to_remain_in_a_mark(stack_a, *stack_a, value->value, &k);
+	find_max_to_remain_in_a_mark_help(stack_a, *stack_a, value->value, &k);
+//	ft_print_stack(*stack_a, *stack_b);
+	ft_move_from_a_to_b(stack_a, stack_b);
+	ft_update_rr_rrr_a(stack_a, ft_stack_size(*stack_a));
+	ft_update_rr_rrr_b(stack_b, ft_stack_size(*stack_b));
+//	ft_print_stack(*stack_a, *stack_b);
+	run_solving(stack_a, stack_b);
+
 }
 
 void ft_sort_stack(t_stack **stack_a, t_stack **stack_b, int deep)
@@ -793,7 +563,7 @@ int is_sorted(t_stack *pStack)
 		{
 			if (prev->order < pStack->order)
 			{
-				printf("COUNTER = %d\n", counter);
+//				printf("COUNTER = %d\n", counter);
 				return (0);
 			}
 			counter++;
@@ -802,6 +572,36 @@ int is_sorted(t_stack *pStack)
 		}
 	}
 	return (1);
+}
+
+void moving_for_sort(t_stack **pStack)
+{
+	t_stack *cur = *pStack;
+	t_stack curr;
+	curr = *cur;
+	while (cur)
+	{
+		if (cur->value < curr.value)
+			curr = *cur;
+		cur = cur->next;
+	}
+	if (curr.rr - 1 < curr.rrr)
+	{
+		while (curr.rr-1 > 0)
+		{
+			ft_ra(pStack,1);
+			curr.rr--;
+		}
+	}
+	else
+	{
+//		printf("RRR = %d\n",curr.rrr);
+		while (curr.rrr + 1 > 0)
+		{
+			ft_rra(pStack, 1);
+			curr.rrr--;
+		}
+	}
 }
 
 int main(int argc, char **argv)
@@ -841,8 +641,9 @@ int main(int argc, char **argv)
 		i++;
 	}
 	ft_sort_stack(&stack_a, &stack_b, ft_stack_size(stack_a));
+	moving_for_sort(&stack_a);
 	printf("\n------------AFTER SORTING------------\n");
-	ft_print_stack(stack_a, stack_b);
+//	ft_print_stack(stack_a, stack_b);
 	if (is_sorted(stack_a))
 		printf("--------------SORTED--------------\n");
 	printf("ans = %d", g_ans);
