@@ -1,8 +1,12 @@
 #include "ft_push_swap.h"
 
-void ft_rb(t_stack **stack)
+void ft_rb(t_stack **stack, int bln)
 {
-	g_ans++;
+	if (bln){
+		g_ans++;
+		printf("rb\n");
+	}
+
 	t_stack *prev;
 	t_stack *cur;
 

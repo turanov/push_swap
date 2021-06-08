@@ -101,13 +101,13 @@ void ft_sort_three(t_stack **pStack)
 	if (stack->order > stack->next->order && stack->next->order < stack->next->next->order &&
 		stack->order > stack->next->next->order)
 	{
-		ft_sa(pStack);
+		ft_sb(pStack,1);
 		stack = *pStack;
 	}
 	// 1 2 3
 	if (stack->order < stack->next->order && stack->next->order < stack->next->next->order)
 	{
-		ft_sa(pStack);
+		ft_sb(pStack,1);
 		stack = *pStack;
 	}
 	// 2 < 3 > 1
@@ -115,21 +115,20 @@ void ft_sort_three(t_stack **pStack)
 		stack->order > stack->next->next->order)
 	{
 
-		printf("1\n");
-		ft_sa(pStack);
+		ft_sb(pStack,1);
 		stack = *pStack;
 	}
 
 	if (stack->order < stack->next->order && stack->next->order > stack->next->next->order &&
 		stack->order < stack->next->next->order)
 	{
-		ft_rra(pStack);
+		ft_rrb(pStack,1);
 		stack = *pStack;
 	}
 	if (stack->order > stack->next->order && stack->order < stack->next->next->order &&
 		stack->next->order < stack->next->next->order)
 	{
-		ft_ra(pStack);
+		ft_rb(pStack,1);
 		stack = *pStack;
 	}
 //	ft_sort_three(pStack);
@@ -282,6 +281,29 @@ void ft_print_flags(t_flags *flags)
 	printf("Max = %d\n", flags->max);
 }
 
+int is_can_do_rb(t_stack **pStack)
+{
+	int min;
+	int i;
+	t_stack *b;
+
+	min = -2147483648;
+	b = *pStack;
+	i = 0;
+	if (b)
+	{
+		min = b->order;
+		while (b->next)
+		{
+			b = b->next;
+			if (min > b->order)
+				min = b->order;
+			i++;
+		}
+	}
+	return (ft_stack_size(*pStack)- i);
+}
+
 void devide_2_part(t_stack **stack_a, t_stack **stack_b, t_flags flags)
 {
 	int best_way;
@@ -294,12 +316,17 @@ void devide_2_part(t_stack **stack_a, t_stack **stack_b, t_flags flags)
 		if (best_way < 0)
 			while (best_way++ < 0)
 			{
-				ft_rra(stack_a);
+				ft_rra(stack_a, 1);
 			}
 		else
 			while (best_way--)
 			{
-				ft_ra(stack_a);
+				if (is_can_do_rb(stack_b))
+				{
+					ft_rr(stack_a, stack_b);
+				}
+				else
+					ft_ra(stack_a,1);
 			}
 		ft_pb(stack_b, stack_a);
 		cnt++;
@@ -327,7 +354,7 @@ int is_next_equal_to_top(t_stack **pStack, t_flags *flags)
 void fun(t_stack **stack_a, t_stack **stack_b, t_flags *flags)
 {
 	ft_pa(stack_a, stack_b);
-	ft_ra(stack_a);
+	ft_ra(stack_a,1);
 	flags->next++;
 }
 
@@ -392,7 +419,30 @@ void ft_sort_five(t_stack **stack_a, t_stack **stack_b)
 	ft_pa(stack_a, stack_b);
 	if (is_top_more_pev(stack_a))
 	{
-		ft_sa(stack_a);
+		t_stack *stack = *stack_b;
+		// 3 1 2
+		int bln = 0;
+		if (stack->order > stack->next->order && stack->next->order < stack->next->next->order &&
+			stack->order > stack->next->next->order)
+		{
+			bln = 1;
+		}
+		// 1 2 3
+		if (stack->order < stack->next->order && stack->next->order < stack->next->next->order)
+		{
+			bln = 1;
+		}
+		// 2 < 3 > 1
+		if (stack->order < stack->next->order && stack->next->order > stack->next->next->order &&
+			stack->order > stack->next->next->order)
+		{
+			bln = 1;
+		}
+		if (bln)
+			ft_ss(stack_a, stack_b);
+		else
+			ft_sa(stack_a, 1);
+
 	}
 	ft_sort_three(stack_b);
 }
@@ -414,7 +464,7 @@ void get_sorted_from_b_to_a(t_stack **stack_a, t_stack **stack_b, t_flags *flags
 				if (is_next_equal_to_top(stack_a, flags))
 				{
 					flags->next++;
-					ft_ra(stack_a);
+					ft_ra(stack_a,1);
 					continue;
 				}
 				b = *stack_b;
@@ -427,22 +477,22 @@ void get_sorted_from_b_to_a(t_stack **stack_a, t_stack **stack_b, t_flags *flags
 				b->flag = -1;
 				ft_pa(stack_a, stack_b);
 				flags->next++;
-				ft_ra(stack_a);
+				ft_ra(stack_a,1);
 			}
-			ft_print_stack(*stack_a, *stack_b);
+//			ft_print_stack(*stack_a, *stack_b);
 		}
 		if (size == 4)
 		{
 			ft_sort_four(stack_a, stack_b);
-			ft_print_stack(*stack_a, *stack_b);
-			printf("FLAGS \n");
-			ft_print_flags(flags);
+//			ft_print_stack(*stack_a, *stack_b);
+//			printf("FLAGS \n");
+//			ft_print_flags(flags);
 			while (flags->next <= flags->mid)
 			{
 				if (is_next_equal_to_top(stack_a, flags))
 				{
 					flags->next++;
-					ft_ra(stack_a);
+					ft_ra(stack_a,1);
 					continue;
 				}
 				b = *stack_b;
@@ -455,7 +505,7 @@ void get_sorted_from_b_to_a(t_stack **stack_a, t_stack **stack_b, t_flags *flags
 				b->flag = -1;
 				ft_pa(stack_a, stack_b);
 				flags->next++;
-				ft_ra(stack_a);
+				ft_ra(stack_a,1);
 			}
 
 //			printf("---------------------\n");
@@ -466,8 +516,8 @@ void get_sorted_from_b_to_a(t_stack **stack_a, t_stack **stack_b, t_flags *flags
 		{
 			ft_sort_three(stack_b);
 
-			ft_print_stack(*stack_a, *stack_b);
-			printf("FLAGS \n");
+//			ft_print_stack(*stack_a, *stack_b);
+//			printf("FLAGS \n");
 			while (flags->next <= flags->mid)
 			{
 				b = *stack_b;
@@ -478,7 +528,7 @@ void get_sorted_from_b_to_a(t_stack **stack_a, t_stack **stack_b, t_flags *flags
 					b = b->next;
 				b->flag = -1;
 				ft_pa(stack_a, stack_b);
-				ft_ra(stack_a);
+				ft_ra(stack_a,1);
 				flags->next++;
 			}
 			return;
@@ -487,10 +537,10 @@ void get_sorted_from_b_to_a(t_stack **stack_a, t_stack **stack_b, t_flags *flags
 
 		if (best_way < 0)
 			while (best_way++ < 0)
-				ft_rra(stack_b);
+				ft_rrb(stack_b,1);
 		else
 			while (best_way--)
-				ft_ra(stack_b);
+				ft_rb(stack_b,1);
 		b = *stack_b;
 		if (!b)
 			return;
@@ -498,7 +548,7 @@ void get_sorted_from_b_to_a(t_stack **stack_a, t_stack **stack_b, t_flags *flags
 			b = b->next;
 		b->flag = -1;
 		ft_pa(stack_a, stack_b);
-		ft_ra(stack_a);
+		ft_ra(stack_a,1);
 		flags->next++;
 	}
 }
@@ -536,13 +586,13 @@ void devide_2_part_second(t_stack **stack_a, t_stack **stack_b, t_flags *flags)
 	{
 		if (is_2_next_equal_to_2_top(stack_a, flags))
 		{
-			ft_sa(stack_a);
+			ft_sa(stack_a,1);
 			a = *stack_a;
 		}
 		if (is_next_equal_to_top(stack_a, flags))
 		{
 			flags->next++;
-			ft_ra(stack_a);
+			ft_ra(stack_a,1);
 			a = *stack_a;
 		}
 		if (a->flag >= 0 && a->order >= flags->next && a->order <= flags->max)
@@ -575,12 +625,12 @@ void devide_2_part_third(t_stack **stack_a, t_stack **stack_b, t_flags *flags)
 	{
 		if (is_2_next_equal_to_2_top(stack_a, flags))
 		{
-			ft_sa(stack_a);
+			ft_sa(stack_a,1);
 		}
 		if (is_next_equal_to_top(stack_a, flags))
 		{
 			flags->next++;
-			ft_ra(stack_a);
+			ft_ra(stack_a,1);
 			update_flags(flags);
 		}
 		else
@@ -594,13 +644,20 @@ void devide_2_part_third(t_stack **stack_a, t_stack **stack_b, t_flags *flags)
 			ft_pb(stack_b, stack_a);
 		}
 		else
-			ft_ra(stack_a);
+		{
+			if (is_can_do_rb(stack_b))
+			{
+				ft_rr(stack_a, stack_b);
+			}
+			else
+				ft_ra(stack_a, 1);
+		}
 		cnt++;
 	}
 	cnt = flags->mid;
 	while (cnt < flags->max)
 	{
-		ft_rra(stack_a);
+		ft_rra(stack_a,1);
 		cnt++;
 	}
 }
@@ -630,7 +687,7 @@ int sort(t_stack **stack_a, t_stack **stack_b, t_flags flags)
 			if (best_way < 0)
 				while (best_way++ < 0)
 				{
-					ft_rra(stack_b);
+					ft_rra(stack_b,1);
 					if (is_next_equal_to_top(stack_b, &flags))
 					{
 						bln = 0;
@@ -641,7 +698,7 @@ int sort(t_stack **stack_a, t_stack **stack_b, t_flags flags)
 			else
 				while (best_way--)
 				{
-					ft_ra(stack_b);
+					ft_ra(stack_b,1);
 					if (is_next_equal_to_top(stack_b, &flags))
 					{
 						bln = 0;
@@ -652,7 +709,7 @@ int sort(t_stack **stack_a, t_stack **stack_b, t_flags flags)
 			if (bln)
 			{
 				check = 1;
-				ft_pb(stack_a, stack_b);
+				ft_pa(stack_a, stack_b);
 			}
 		}
 		cnt++;
@@ -687,13 +744,15 @@ void solve(t_stack **stack_a, t_stack **stack_b, int min, int max)
 	if (!flags)
 		return;
 	devide_2_part(stack_a, stack_b, *flags);
-	printf("\n------------AFTER DIVIDE------------\n");
+	printf("COUNTER = %d\n", g_ans);
+	printf("-----------AFTER DIVIDE-----------\n");
 	ft_print_stack(*stack_a, *stack_b);
-	printf("\n");
+	printf("----------------\n");
 	while (flags->next <= flags->mid)
 	{
 		flags->next = sort(stack_a, stack_b,
 						   get_new_flag(flags->next, (flags->mid - flags->next) / 2 + flags->next, flags->mid));
+		printf("-----------------\n");
 	}
 	while (flags->next <= flags->max)
 	{
@@ -791,3 +850,5 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+
+//8 14 4 12 5 10 1 15 2 11 7 13 3 6 9

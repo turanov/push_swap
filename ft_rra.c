@@ -1,8 +1,11 @@
 #include "ft_push_swap.h"
 
-void ft_rra(t_stack **stack)
+void ft_rra(t_stack **stack, int bln)
 {
-	g_ans++;
+	if (bln){
+		g_ans++;
+		printf("rra\n");
+	}
 	t_stack *first;
 	t_stack *last;
 

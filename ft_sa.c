@@ -1,11 +1,13 @@
 #include "ft_push_swap.h"
 
-void	ft_sa(t_stack **stack)
+void	ft_sa(t_stack **stack, int bln)
 {
-	g_ans++;
+	if (bln){
+		g_ans++;
+		printf("sa\n");
+	}
 	t_stack	*cur;
 	t_stack	*temp;
-
 	temp = *stack;
 	cur = 0;
 	if (temp)

@@ -2,6 +2,7 @@
 
 void ft_pa(t_stack **stack_a, t_stack **stack_b)
 {
+	printf("pa\n");
 	g_ans++;
 	t_stack *a;
 	t_stack *b;
@@ -30,3 +31,7 @@ void ft_pa(t_stack **stack_a, t_stack **stack_b)
 		free(b);
 	}
 }
+//14 12 10 15 11 13 9
+
+//6 3 7 2 1 5 4 8
+

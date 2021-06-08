@@ -3,6 +3,7 @@
 void ft_ss(t_stack **stack_a, t_stack **stack_b)
 {
 	g_ans++;
-	ft_sa(stack_a);
-	ft_sb(stack_b);
+	printf("ss\n");
+	ft_sa(stack_a, 0);
+	ft_sb(stack_b, 0);
 }
