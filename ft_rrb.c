@@ -1,16 +1,14 @@
 #include "ft_push_swap.h"
 
-void ft_rrb(t_stack **stack, int bln)
+void	ft_rrb(t_stack **stack, char *str)
 {
-	if (bln){
-		g_ans++;
-		printf("rrb\n");
-	}
-	t_stack *first;
-	t_stack *last;
+	t_stack	*first;
+	t_stack	*last;
 
+	ft_putstr_fd(str, 1);
 	first = *stack;
 	if (first)
+	{
 		if (first->next)
 		{
 			*stack = (*stack)->next;
@@ -20,4 +18,5 @@ void ft_rrb(t_stack **stack, int bln)
 			first->next = NULL;
 			last->next = first;
 		}
+	}
 }

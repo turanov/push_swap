@@ -1,14 +1,11 @@
 #include "ft_push_swap.h"
 
-void	ft_sb(t_stack **stack, int bln)
+void	ft_sb(t_stack **stack, char *str)
 {
-	if (bln){
-		g_ans++;
-		printf("sb\n");
-	}
 	t_stack	*cur;
-	t_stack	*next;
 	t_stack	*temp;
+
+	ft_putstr_fd(str, 1);
 	temp = *stack;
 	cur = 0;
 	if (temp)
@@ -23,7 +20,6 @@ void	ft_sb(t_stack **stack, int bln)
 		if (cur && temp)
 		{
 			ft_swap(&cur->value, &temp->value);
-			ft_swap(&cur->order, &temp->order);
 			ft_swap(&cur->flag, &temp->flag);
 		}
 	}

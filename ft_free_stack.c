@@ -1,19 +1,17 @@
 #include "ft_push_swap.h"
 
-static void	ft_del(t_stack *stack)
-{
-	if (!stack)
-		return ;
-	ft_del(stack->next);
-	free(stack);
-}
-
 void	ft_free_stack(t_stack **stack)
 {
-	if (!(*stack))
-		return ;
-	ft_del(*stack);
-	*stack = 0;
+	t_stack	*node;
+	t_stack	*next;
+
+	node = *stack;
+	while (node)
+	{
+		next = node->next;
+		free(node);
+		node = next;
+	}
 }
 
 void	ft_swap(int *a, int *b)

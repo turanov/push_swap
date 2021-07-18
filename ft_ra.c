@@ -1,15 +1,11 @@
 #include "ft_push_swap.h"
 
-void ft_ra(t_stack **stack, int bln)
+void	ft_ra(t_stack **stack, char *str)
 {
-	if (bln){
-		g_ans++;
-		printf("ra\n");
-	}
+	t_stack	*prev;
+	t_stack	*cur;
 
-	t_stack *prev;
-	t_stack *cur;
-
+	ft_putstr_fd(str, 1);
 	cur = *stack;
 	if (cur)
 	{
