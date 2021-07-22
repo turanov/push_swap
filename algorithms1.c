@@ -95,9 +95,7 @@ void	ft_move_from_a_to_b(t_stack **stack_a, t_stack **stack_b)
 		while (cur->next)
 			cur = cur->next;
 		if (cur->flag == 0)
-		{
 			ft_pb(stack_b, stack_a, "pb\n");
-		}
 		else
 			ft_ra(stack_a, "ra\n");
 	}

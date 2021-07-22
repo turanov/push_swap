@@ -40,7 +40,7 @@ int	validation(char *s)
 	int	minus;
 
 	minus = 0;
-	while (*s == '-' || *s == '+')
+	if (*s == '-' || *s == '+')
 	{
 		if (*s == '-')
 			minus++;

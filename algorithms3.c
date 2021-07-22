@@ -9,7 +9,7 @@ void	fun_rr(t_stack **stack_a, t_stack **stack_b,
 	temp_a.rr -= k;
 	temp_b.rr -= k;
 	while (k-- > 0)
-		ft_rr(stack_a, stack_b);
+		ft_rr(stack_a, stack_b, "rr\n");
 	while (temp_a.rr-- > 0)
 		ft_ra(stack_a, "ra\n");
 	while (temp_b.rr-- > 0)
@@ -25,7 +25,7 @@ void	fun_rrr(t_stack **stack_a, t_stack **stack_b,
 	temp_a.rrr -= k;
 	temp_b.rrr -= k;
 	while (k-- > 0)
-		ft_rrr(stack_a, stack_b);
+		ft_rrr(stack_a, stack_b, "rrr\n");
 	while (temp_a.rrr-- > 0)
 		ft_rra(stack_a, "rra\n");
 	while (temp_b.rrr-- > 0)

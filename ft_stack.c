@@ -42,3 +42,30 @@ int	ft_add_front(t_stack **stack, t_stack *new)
 	*stack = new;
 	return (1);
 }
+
+int	main_helper(char **splited, t_stack **stack_a)
+{
+	int	j;
+
+	j = 0;
+	while (splited[j])
+	{
+		if (validation(splited[j]))
+		{
+			if (ft_add_front(stack_a, ft_new(ft_atoi(splited[j]), 0)) == 0)
+			{
+				ft_free_splited(splited);
+				ft_free_stack(stack_a);
+				return (1);
+			}
+		}
+		else
+		{
+			ft_free_splited(splited);
+			ft_free_stack(stack_a);
+			return (1);
+		}
+		j++;
+	}
+	return (0);
+}

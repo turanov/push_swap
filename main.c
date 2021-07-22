@@ -47,8 +47,8 @@ void	ft_sort_three(t_stack **pStack)
 
 int	is_sorted(t_stack *pStack)
 {
-	t_stack		*prev;
-	int			counter;
+	t_stack	*prev;
+	int		counter;
 
 	counter = 1;
 	prev = pStack;
@@ -67,31 +67,23 @@ int	is_sorted(t_stack *pStack)
 	return (1);
 }
 
-int	main_helper(char **splited, t_stack **stack_a)
+void	run(t_stack **stack_a, t_stack **stack_b)
 {
-	int	j;
+	int	size;
 
-	j = 0;
-	while (splited[j])
-	{
-		if (validation(splited[j]))
-		{
-			if (ft_add_front(stack_a, ft_new(ft_atoi(splited[j]), 0)) == 0)
-			{
-				ft_free_splited(splited);
-				ft_free_stack(stack_a);
-				return (1);
-			}
-		}
-		else
-		{
-			ft_free_splited(splited);
-			ft_free_stack(stack_a);
-			return (1);
-		}
-		j++;
-	}
-	return (0);
+	size = ft_stack_size(*stack_a);
+	if (size == 1)
+		return ;
+	if (size == 2)
+		sort_two(stack_a);
+	else if (size == 3)
+		ft_sort_three(stack_a);
+	else if (size == 4)
+		ft_sort_four(stack_a, stack_b);
+	else if (size == 5)
+		ft_sort_five(stack_a, stack_b);
+	else
+		solve(stack_a, stack_b, *stack_a, *stack_b);
 }
 
 int	main(int argc, char **argv)
@@ -101,22 +93,23 @@ int	main(int argc, char **argv)
 	char	**splited;
 	int		i;
 
-	i = 1;
-	(void)argc;
+	i = argc / argc;
 	while (argv[i])
 	{
-		splited = ft_split(argv[i], ' ');
+		splited = ft_split(argv[i++], ' ');
 		if (main_helper(splited, &stack_a) == 1)
+		{
+			ft_putstr_fd("Error\n", 1);
 			return (1);
+		}
 		ft_free_splited(splited);
-		i++;
 	}
 	if (is_sorted(stack_a))
 	{
 		ft_free_stack(&stack_a);
 		return (0);
 	}
-	solve(&stack_a, &stack_b, stack_a, stack_a);
+	run(&stack_a, &stack_b);
 	moving_for_sort(&stack_a);
 	ft_free_stack(&stack_a);
 	return (0);
